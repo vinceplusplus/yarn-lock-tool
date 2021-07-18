@@ -1,0 +1,203 @@
+{
+  "name": "yarn-lock-tool",
+  "version": "0.8.0",
+  "description": "analyze and deduplicate dependencies from yarn lock file",
+  "bin": "bin/yarn-lock-tool.js",
+  "main": "lib/commonjs/index",
+  "module": "lib/module/index",
+  "types": "lib/typescript/index.d.ts",
+  "react-native": "src/index",
+  "source": "src/index",
+  "files": [
+    "bin",
+    "src",
+    "lib",
+    "LICENSE",
+    "README.md",
+    "!**/__tests__",
+    "!**/__fixtures__",
+    "!**/__mocks__"
+  ],
+  "scripts": {
+    "test": "jest",
+    "typescript": "tsc --noEmit",
+    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "prepare": "bob build",
+    "release": "release-it"
+  },
+  "keywords": [
+    "deduplicate",
+    "yarn",
+    "lock",
+    "analyze"
+  ],
+  "repository": "https://github.com/vinceplusplus/yarn-lock-tool",
+  "author": "Vincent Cheung <vinceplusplus@gmail.com> (https://github.com/vinceplusplus)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vinceplusplus/yarn-lock-tool/issues"
+  },
+  "homepage": "https://github.com/vinceplusplus/yarn-lock-tool",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "devDependencies": {
+    "@commitlint/config-conventional": "^11.0.0",
+    "@react-native-community/eslint-config": "^2.0.0",
+    "@release-it/conventional-changelog": "^2.0.0",
+    "@types/inquirer": "^7.3.3",
+    "@types/inquirer-autocomplete-prompt": "^1.3.2",
+    "@types/jest": "^26.0.0",
+    "@types/node": "^16.3.3",
+    "@types/semver": "^7.3.7",
+    "@types/yargs": "^17.0.2",
+    "@types/yarnpkg__lockfile": "^1.1.5",
+    "@typescript-eslint/eslint-plugin": "^4.28.3",
+    "@typescript-eslint/parser": "^4.28.3",
+    "commitlint": "^11.0.0",
+    "eslint": "^7.2.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-prettier": "^3.1.3",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "husky": "^4.2.5",
+    "jest": "^26.0.1",
+    "prettier": "^2.0.5",
+    "react-native-builder-bob": "^0.18.0",
+    "release-it": "^14.2.2",
+    "ts-jest": "^26.5.6",
+    "typescript": "^4.1.3"
+  },
+  "jest": {
+    "roots": [
+      "<rootDir>/src"
+    ],
+    "testMatch": [
+      "**/__tests__/**/*.+(ts|tsx|js)",
+      "**/?(*.)+(spec|test).+(ts|tsx|js)"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "ts-jest"
+    },
+    "modulePathIgnorePatterns": [
+      "<rootDir>/lib/"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "yarn lint && yarn typescript"
+    }
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "release-it": {
+    "git": {
+      "commitMessage": "chore: release ${version}",
+      "tagName": "v${version}"
+    },
+    "npm": {
+      "publish": true
+    },
+    "github": {
+      "release": false
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": "angular"
+      }
+    }
+  },
+  "eslintConfig": {
+    "root": true,
+    "overrides": [
+      {
+        "files": [
+          "*.ts",
+          "*.tsx"
+        ],
+        "parser": "@typescript-eslint/parser",
+        "parserOptions": {
+          "project": "./tsconfig.json"
+        },
+        "extends": [
+          "plugin:@typescript-eslint/eslint-recommended",
+          "plugin:@typescript-eslint/recommended",
+          "plugin:prettier/recommended"
+        ],
+        "plugins": [
+          "import",
+          "simple-import-sort"
+        ],
+        "rules": {
+          "prettier/prettier": [
+            "error",
+            {
+              "quoteProps": "consistent",
+              "singleQuote": true,
+              "tabWidth": 2,
+              "trailingComma": "all",
+              "useTabs": false,
+              "semi": false,
+              "printWidth": 100
+            }
+          ],
+          "import/order": "off",
+          "import/no-cycle": [
+            "error",
+            {
+              "maxDepth": "∞",
+              "ignoreExternal": true
+            }
+          ],
+          "simple-import-sort/exports": "error",
+          "simple-import-sort/imports": "error",
+          "sort-imports": "off",
+          "@typescript-eslint/switch-exhaustiveness-check": "error",
+          "@typescript-eslint/explicit-module-boundary-types": "off",
+          "no-fallthrough": "off",
+          "no-unused-vars": "off"
+        }
+      },
+      {
+        "files": "*.js",
+        "parserOptions": {
+          "ecmaVersion": 2015
+        }
+      }
+    ]
+  },
+  "prettier": {
+    "quoteProps": "consistent",
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "all",
+    "useTabs": false,
+    "semi": false,
+    "printWidth": 100
+  },
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json"
+        }
+      ]
+    ]
+  },
+  "dependencies": {
+    "@yarnpkg/lockfile": "^1.1.0",
+    "inquirer": "^8.1.2",
+    "inquirer-autocomplete-prompt": "^1.4.0",
+    "semver": "^7.3.5",
+    "yargs": "^17.0.1"
+  }
+}
