@@ -91,7 +91,17 @@ yarn-lock-tool dedupeJust abc[@x.y.z[=>i.j.k]]
 - `x.y.z` - version range specified in `package.json`, i.e. ^1.0.0
 - `i.j.k` - an existing resolvable version in `yarn.lock` to resolve the said dependency
 
-Depending on how much you provide, the tool might prompt you to choose in order to perform deduplication
+Depending on how much you provide, the tool might prompt you to choose in order to perform deduplication.
+
+Sometimes, if an indirect dependency is out of date to support the current use cases, you could add the
+desired version as a direct dependency and use `dedupeJust` to deduplicate to upgrade to the desired
+dependency. Then you could remove that direct dependency when done.
+
+```shell
+yarn add abc@new-version
+yarn-lock-tool dedupeJust abc@^old-version=>new-version
+yarn remove abc@new-version
+```
 
 ### List dependencies
 
@@ -170,8 +180,8 @@ yarn-lock-tool listWithDependencyPaths --sources devDependencies --sortsByDepth 
 
 ## Why?
 When `yarn` install packages without a `yarn.lock` file, it will deduplicate. However, newer
-installations will not deduplicate the existing dependencies, over time, duplicated dependencies
-will build up.
+installations will not deduplicate the existing dependencies to reduce risk of breaking, over time,
+duplicated dependencies will build up.
 
 Duplicated dependencies could result in an increase of app size. Depending on how stateful a
 dependency is, a duplicated dependency might result in undefined app behavior.
