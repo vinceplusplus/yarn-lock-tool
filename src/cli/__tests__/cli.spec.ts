@@ -68,6 +68,27 @@ describe('cli', () => {
           expect(workingContext.firstLevelDependencies).toEqual(expectedFirstLevelDependencies)
         })
       })
+      it('should work properly when skirmishes is true', async () => {
+        await replicateEnvironment(`${__dirname}/../../__fixtures__/duplicated`, async () => {
+          asMockFnSafely(parseCLIParams).mockImplementation(() => ({
+            type: 'dedupe',
+            params: {
+              resolutions: 'all',
+              skirmishes: true,
+            },
+          }))
+
+          const oldWorkingContext = load('.')
+
+          await main()
+
+          const workingContext = load('.')
+
+          expect(workingContext.firstLevelDependencies).toEqual(
+            oldWorkingContext.firstLevelDependencies,
+          )
+        })
+      })
     })
     describe('dedupeJust', () => {
       it('should work fine', async () => {

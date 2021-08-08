@@ -150,6 +150,26 @@ describe('analysis', () => {
         versionRange: 'git+ssh://github.com/xyz/bar#^2.3.4',
         semVerRange: '>=2.3.4 <3.0.0-0',
       })
+      expect(extractFromVersionedPackageName('bar@git://repos.com/xyz/bar#^2.3.4')).toEqual({
+        packageName: 'bar',
+        versionRange: 'git://repos.com/xyz/bar#^2.3.4',
+        semVerRange: '>=2.3.4 <3.0.0-0',
+      })
+      expect(extractFromVersionedPackageName('bar@git+http://repos.com/xyz/bar#^2.3.4')).toEqual({
+        packageName: 'bar',
+        versionRange: 'git+http://repos.com/xyz/bar#^2.3.4',
+        semVerRange: '>=2.3.4 <3.0.0-0',
+      })
+      expect(extractFromVersionedPackageName('bar@git+https://repos.com/xyz/bar#^2.3.4')).toEqual({
+        packageName: 'bar',
+        versionRange: 'git+https://repos.com/xyz/bar#^2.3.4',
+        semVerRange: '>=2.3.4 <3.0.0-0',
+      })
+      expect(extractFromVersionedPackageName('bar@git+file://repos.com/xyz/bar#^2.3.4')).toEqual({
+        packageName: 'bar',
+        versionRange: 'git+file://repos.com/xyz/bar#^2.3.4',
+        semVerRange: '>=2.3.4 <3.0.0-0',
+      })
       expect(
         extractFromVersionedPackageName('@foo/bar@unsupported://github.com/xyz/bar#^2.3.4'),
       ).toEqual({
