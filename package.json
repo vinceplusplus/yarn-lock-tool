@@ -1,6 +1,6 @@
 {
   "name": "yarn-lock-tool",
-  "version": "0.8.1",
+  "version": "0.9.0",
   "description": "analyze and deduplicate dependencies from yarn lock file",
   "bin": "bin/yarn-lock-tool.js",
   "main": "lib/commonjs/index",
