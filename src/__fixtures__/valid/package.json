@@ -1,0 +1,12 @@
+{
+  "name": "valid",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^4.17.21"
+  },
+  "optionalDependencies": {
+    "semver": "^7.3.5"
+  }
+}

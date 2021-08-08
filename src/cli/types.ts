@@ -7,6 +7,7 @@ export type DedupeParams = {
 
 export type DedupeJustParams = {
   dependency: string | null
+  newVersion: string | null
 }
 
 export type ListParams = {

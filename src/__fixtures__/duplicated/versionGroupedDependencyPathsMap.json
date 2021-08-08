@@ -1,0 +1,239 @@
+{
+  "@react-navigation/core": {
+    "5.12.4": {
+      "@react-navigation/core@^5.12.4": [
+        [
+          "@react-navigation/core@^5.12.4"
+        ]
+      ]
+    },
+    "5.15.5": {
+      "@react-navigation/core@^5.0.0": [
+        [
+          "@react-navigation/core@^5.0.0"
+        ]
+      ],
+      "@react-navigation/core@^5.15.5": [
+        [
+          "@react-navigation/core@^5.15.5"
+        ]
+      ]
+    }
+  },
+  "@react-navigation/routers": {
+    "5.7.4": {
+      "@react-navigation/routers@^5.4.12": [
+        [
+          "@react-navigation/core@^5.12.4",
+          "@react-navigation/routers@^5.4.12"
+        ]
+      ],
+      "@react-navigation/routers@^5.7.4": [
+        [
+          "@react-navigation/core@^5.0.0",
+          "@react-navigation/routers@^5.7.4"
+        ],
+        [
+          "@react-navigation/core@^5.15.5",
+          "@react-navigation/routers@^5.7.4"
+        ]
+      ]
+    }
+  },
+  "nanoid": {
+    "3.1.23": {
+      "nanoid@^3.1.15": [
+        [
+          "@react-navigation/core@^5.12.4",
+          "@react-navigation/routers@^5.4.12",
+          "nanoid@^3.1.15"
+        ],
+        [
+          "@react-navigation/core@^5.0.0",
+          "@react-navigation/routers@^5.7.4",
+          "nanoid@^3.1.15"
+        ],
+        [
+          "@react-navigation/core@^5.0.0",
+          "nanoid@^3.1.15"
+        ],
+        [
+          "@react-navigation/core@^5.15.5",
+          "@react-navigation/routers@^5.7.4",
+          "nanoid@^3.1.15"
+        ],
+        [
+          "@react-navigation/core@^5.15.5",
+          "nanoid@^3.1.15"
+        ]
+      ],
+      "nanoid@^3.1.12": [
+        [
+          "@react-navigation/core@^5.12.4",
+          "nanoid@^3.1.12"
+        ]
+      ]
+    }
+  },
+  "escape-string-regexp": {
+    "4.0.0": {
+      "escape-string-regexp@^4.0.0": [
+        [
+          "@react-navigation/core@^5.12.4",
+          "escape-string-regexp@^4.0.0"
+        ],
+        [
+          "@react-navigation/core@^5.0.0",
+          "escape-string-regexp@^4.0.0"
+        ],
+        [
+          "@react-navigation/core@^5.15.5",
+          "escape-string-regexp@^4.0.0"
+        ]
+      ]
+    }
+  },
+  "query-string": {
+    "6.14.1": {
+      "query-string@^6.13.1": [
+        [
+          "@react-navigation/core@^5.12.4",
+          "query-string@^6.13.1"
+        ]
+      ],
+      "query-string@^6.13.6": [
+        [
+          "@react-navigation/core@^5.0.0",
+          "query-string@^6.13.6"
+        ],
+        [
+          "@react-navigation/core@^5.15.5",
+          "query-string@^6.13.6"
+        ]
+      ]
+    }
+  },
+  "decode-uri-component": {
+    "0.2.0": {
+      "decode-uri-component@^0.2.0": [
+        [
+          "@react-navigation/core@^5.12.4",
+          "query-string@^6.13.1",
+          "decode-uri-component@^0.2.0"
+        ],
+        [
+          "@react-navigation/core@^5.0.0",
+          "query-string@^6.13.6",
+          "decode-uri-component@^0.2.0"
+        ],
+        [
+          "@react-navigation/core@^5.15.5",
+          "query-string@^6.13.6",
+          "decode-uri-component@^0.2.0"
+        ]
+      ]
+    }
+  },
+  "filter-obj": {
+    "1.1.0": {
+      "filter-obj@^1.1.0": [
+        [
+          "@react-navigation/core@^5.12.4",
+          "query-string@^6.13.1",
+          "filter-obj@^1.1.0"
+        ],
+        [
+          "@react-navigation/core@^5.0.0",
+          "query-string@^6.13.6",
+          "filter-obj@^1.1.0"
+        ],
+        [
+          "@react-navigation/core@^5.15.5",
+          "query-string@^6.13.6",
+          "filter-obj@^1.1.0"
+        ]
+      ]
+    }
+  },
+  "split-on-first": {
+    "1.1.0": {
+      "split-on-first@^1.0.0": [
+        [
+          "@react-navigation/core@^5.12.4",
+          "query-string@^6.13.1",
+          "split-on-first@^1.0.0"
+        ],
+        [
+          "@react-navigation/core@^5.0.0",
+          "query-string@^6.13.6",
+          "split-on-first@^1.0.0"
+        ],
+        [
+          "@react-navigation/core@^5.15.5",
+          "query-string@^6.13.6",
+          "split-on-first@^1.0.0"
+        ]
+      ]
+    }
+  },
+  "strict-uri-encode": {
+    "2.0.0": {
+      "strict-uri-encode@^2.0.0": [
+        [
+          "@react-navigation/core@^5.12.4",
+          "query-string@^6.13.1",
+          "strict-uri-encode@^2.0.0"
+        ],
+        [
+          "@react-navigation/core@^5.0.0",
+          "query-string@^6.13.6",
+          "strict-uri-encode@^2.0.0"
+        ],
+        [
+          "@react-navigation/core@^5.15.5",
+          "query-string@^6.13.6",
+          "strict-uri-encode@^2.0.0"
+        ]
+      ]
+    }
+  },
+  "react-is": {
+    "16.13.1": {
+      "react-is@^16.13.0": [
+        [
+          "@react-navigation/core@^5.12.4",
+          "react-is@^16.13.0"
+        ],
+        [
+          "@react-navigation/core@^5.0.0",
+          "react-is@^16.13.0"
+        ],
+        [
+          "@react-navigation/core@^5.15.5",
+          "react-is@^16.13.0"
+        ]
+      ]
+    }
+  },
+  "use-subscription": {
+    "1.5.1": {
+      "use-subscription@^1.4.0": [
+        [
+          "@react-navigation/core@^5.12.4",
+          "use-subscription@^1.4.0"
+        ]
+      ]
+    }
+  },
+  "object-assign": {
+    "4.1.1": {
+      "object-assign@^4.1.1": [
+        [
+          "@react-navigation/core@^5.12.4",
+          "use-subscription@^1.4.0",
+          "object-assign@^4.1.1"
+        ]
+      ]
+    }
+  }
+}

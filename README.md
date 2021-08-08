@@ -84,7 +84,7 @@ Perform deduplication and print logs but do not write to `yarn.lock`
 ### Deduplicate a single dependency
 
 ```shell
-yarn-lock-tool dedupeJust abc[@x.y.z[=>i.j.k]]
+yarn-lock-tool dedupeJust abc[@x.y.z] i.j.k
 ```
 
 - `abc` - package name
@@ -99,7 +99,7 @@ dependency. Then you could remove that direct dependency when done.
 
 ```shell
 yarn add abc@new-version
-yarn-lock-tool dedupeJust abc@^old-version=>new-version
+yarn-lock-tool dedupeJust abc@^old-version new-version
 yarn remove abc@new-version
 ```
 

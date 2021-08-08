@@ -42,12 +42,16 @@ export const parseCLIParams = (
       },
     )
     .command(
-      'dedupeJust [dependency]',
+      'dedupeJust [dependency] [newVersion]',
       'deduplicate a dependency under a certain package name',
       (yargs) => {
         return yargs
           .positional('dependency', {
-            describe: 'e.g. package-name, package-name@^1.0.0, or package-name@^1.0.0=>1.2.3',
+            describe: 'e.g. package-name or package-name@^1.0.0',
+            default: null,
+          })
+          .positional('newVersion', {
+            describe: '1.2.3',
             default: null,
           })
           .help()

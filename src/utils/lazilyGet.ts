@@ -34,6 +34,7 @@ class LazyProperties<Container> {
 
   set = <Key extends keyof Container>(key: Key, value: Container[Key]) => {
     this.container[key] = value
+    return this
   }
 
   getCurrentContainer = () => {

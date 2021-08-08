@@ -29,6 +29,7 @@ export const validListWithDependencyPathsFromTypes: ValidStrings<ListWithDepende
     dependenciesAndDevDependencies: 'dependenciesAndDevDependencies',
   }
 
+export type Version = string
 export type DependencyVersionRange = string
 export type Dependencies = {
   [packageName: string]: DependencyVersionRange
@@ -78,4 +79,8 @@ export type VersionGroupedDependencyPathsMap = {
   [packageName: string]: {
     [version: string]: DependencyPathsMap
   }
+}
+
+export type PackagesVersions = {
+  [packageName: string]: Version[]
 }

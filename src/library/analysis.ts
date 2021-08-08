@@ -6,13 +6,16 @@ import type {
   DependencyPath,
   DependencyPaths,
   DependencyPathsMap,
+  PackagesVersions,
   Resolutions,
   VersionedPackageName,
   VersionedPackages,
   VersionGroupedDependencyPathsMap,
   YarnLockFirstLevelDependencies,
 } from '../types/types'
+import { assertNonNullish } from '../utils/assertion'
 import { lazily } from '../utils/lazilyGet'
+import { makeObjectHOF } from '../utils/objectHOF'
 
 export const getDependencies = (
   container: {
@@ -48,12 +51,15 @@ export const extractFromVersionedPackageName = (versionedPackageName: string) =>
     if (url != null) {
       // https://docs.npmjs.com/cli/v7/configuring-npm/package-json#git-urls-as-dependencies
       switch (url.protocol) {
-        case 'git':
-        case 'git+ssh':
-        case 'git+http':
-        case 'git+https':
-        case 'git+file': {
+        case 'git:':
+        case 'git+ssh:':
+        case 'git+http:':
+        case 'git+https:':
+        case 'git+file:': {
           const commitish = url.hash.substring(1)
+          if (commitish === '') {
+            return null
+          }
           const semVerRange = commitish.replace(/^semver:/, '')
           return semver.validRange(semVerRange)
         }
@@ -61,6 +67,9 @@ export const extractFromVersionedPackageName = (versionedPackageName: string) =>
           return null
       }
     } else {
+      if (versionRange === '') {
+        return null
+      }
       // NOTE: as of this writing, validRange() could return null but doesn't annotate so
       const semVerRange: string | null = semver.validRange(versionRange)
       return semVerRange
@@ -104,7 +113,7 @@ export const buildResolutionsFromDependencies = (
       const versionedPackageName = `${packageName}@${versionRange}`
       const resolvedDependency = firstLevelDependencies[versionedPackageName]
       if (resolvedDependency == null) {
-        throw new Error('should not reach here')
+        throw new Error('bad input')
       }
 
       const packageResolutions = lazily(container)
@@ -167,7 +176,7 @@ export const buildDependencyPaths = (
     }
     const resolvedDependency = firstLevelDependencies[versionedPackageName]
     if (resolvedDependency == null) {
-      throw new Error('should not reach here')
+      throw new Error('bad input')
     }
     const dependencyPath = [...parentDependencyPath, versionedPackageName]
 
@@ -199,9 +208,7 @@ export const buildDependencyPathsMap = (
     const dependencyPaths = buildDependencyPaths(versionedPackageName, firstLevelDependencies)
     for (const dependencyPath of dependencyPaths) {
       const tailingDependency = dependencyPath[dependencyPath.length - 1]
-      if (tailingDependency == null) {
-        throw new Error('should not reach here')
-      }
+      assertNonNullish(tailingDependency)
 
       lazily(container)
         .get(tailingDependency, () => [])
@@ -222,9 +229,8 @@ export const buildVersionGroupedDependencyPathsMap = (
   for (const [versionedPackageName, dependencyPaths] of Object.entries(dependencyPathsMap)) {
     const { packageName } = extractFromVersionedPackageName(versionedPackageName)
     const firstLevelDependency = firstLevelDependencies[versionedPackageName]
-    if (firstLevelDependency == null) {
-      throw new Error('should not reach here')
-    }
+    assertNonNullish(firstLevelDependency)
+
     const { version } = firstLevelDependency
     lazily(container)
       .get(packageName, () => ({}))
@@ -233,4 +239,51 @@ export const buildVersionGroupedDependencyPathsMap = (
   }
 
   return container
+}
+
+export const buildDeduplicatables = (
+  resolutions: Resolutions,
+): { deduplicatables: Resolutions; packagesVersions: PackagesVersions } => {
+  const packagesVersions = (() => {
+    const container: PackagesVersions = {}
+    for (const [packageName, packageResolutions] of Object.entries(resolutions)) {
+      const versions: { [version: string]: true } = {}
+      for (const [, firstLevelDependency] of Object.entries(packageResolutions)) {
+        versions[firstLevelDependency.version] = true
+      }
+      container[packageName] = Object.keys(versions).sort(semver.compare)
+    }
+    return container
+  })()
+  const canDeduplicate = (versionedPackageName: string, versions: string[]): boolean => {
+    const { semVerRange } = extractFromVersionedPackageName(versionedPackageName)
+    if (semVerRange == null) {
+      return false
+    }
+    return versions.filter((version) => semver.satisfies(version, semVerRange)).length >= 2
+  }
+
+  const deduplicatables = makeObjectHOF(resolutions, { clones: true })
+    .filter((...[packageName, packageResolutions]) => {
+      const versions = packagesVersions[packageName]
+      assertNonNullish(versions)
+      return (
+        Object.keys(packageResolutions).filter((versionedPackageName) => {
+          return canDeduplicate(versionedPackageName, versions)
+        }).length >= 1
+      )
+    })
+    .traverse()
+    .filter((versionedPackageName) => {
+      const { packageName } = extractFromVersionedPackageName(versionedPackageName)
+      const versions = packagesVersions[packageName]
+      assertNonNullish(versions)
+      return canDeduplicate(versionedPackageName, versions)
+    })
+    .getObject()
+
+  return {
+    deduplicatables,
+    packagesVersions,
+  }
 }

@@ -110,7 +110,7 @@ class ObjectHOF<ObjectType, SubobjectType, Container, Key extends ObjectKey<Cont
   }
 }
 
-export const objectHOF = <Container>(
+export const makeObjectHOF = <Container>(
   container: Container,
   initializationOptions?: InitializationOptions,
 ) => {
@@ -127,10 +127,8 @@ export const objectHOF = <Container>(
   return new ObjectHOF(inputContainer, [inputContainer], [inputContainer])
 }
 
-type ReplaceValueType<Container, Value, NewValue> = Container[keyof Container] extends Record<
-  string,
-  unknown
->
+// eslint-disable-next-line @typescript-eslint/ban-types
+type ReplaceValueType<Container, Value, NewValue> = Container[keyof Container] extends {}
   ? Container[keyof Container] extends Value
     ? { [key in keyof Container]: NewValue }
     : {

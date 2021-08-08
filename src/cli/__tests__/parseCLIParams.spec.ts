@@ -1,51 +1,51 @@
-import { AssertionError } from 'assert'
-
-import { parseCLIParams } from './parseCLIParams'
+import { assertNonNullish, assertTrue } from '../../utils/assertion'
+import { parseCLIParams } from '../parseCLIParams'
 import type {
   DedupeJustParams,
   DedupeParams,
   ListParams,
   ListWithDependencyPathsParams,
-} from './types'
-
-// TODO: wait for assertion support from jest
-//       https://github.com/DefinitelyTyped/DefinitelyTyped/issues/41179
-//       https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#assertion-functions
-function assert(condition: unknown, message?: string): asserts condition {
-  if (!condition) {
-    throw new AssertionError({ message })
-  }
-}
+} from '../types'
 
 const parseDedupeParams = (args: string[]): DedupeParams => {
   const paramsContainer = parseCLIParams(['dedupe', ...args], true)
-  assert(paramsContainer != null)
-  assert(paramsContainer.type === 'dedupe')
+  assertNonNullish(paramsContainer)
+  assertTrue(paramsContainer.type === 'dedupe')
   return paramsContainer.params
 }
 
 const parseDedupeJustParams = (args: string[]): DedupeJustParams => {
   const paramsContainer = parseCLIParams(['dedupeJust', ...args], true)
-  assert(paramsContainer != null)
-  assert(paramsContainer.type === 'dedupeJust')
+  assertNonNullish(paramsContainer)
+  assertTrue(paramsContainer.type === 'dedupeJust')
   return paramsContainer.params
 }
 
 const parseListParams = (args: string[]): ListParams => {
   const paramsContainer = parseCLIParams(['list', ...args], true)
-  assert(paramsContainer != null)
-  assert(paramsContainer.type === 'list')
+  assertNonNullish(paramsContainer)
+  assertTrue(paramsContainer.type === 'list')
   return paramsContainer.params
 }
 
 const parseListWithDependencyPathsParams = (args: string[]): ListWithDependencyPathsParams => {
   const paramsContainer = parseCLIParams(['listWithDependencyPaths', ...args], true)
-  assert(paramsContainer != null)
-  assert(paramsContainer.type === 'listWithDependencyPaths')
+  assertNonNullish(paramsContainer)
+  assertTrue(paramsContainer.type === 'listWithDependencyPaths')
   return paramsContainer.params
 }
 
 describe('cli', () => {
+  it('should exit process if not arguments are passed', () => {
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => '')
+    const processExitSpy = jest.spyOn(process, 'exit').mockImplementation(() => {
+      throw new Error('process.exit()')
+    })
+    expect(() => parseCLIParams([])).toThrow('process.exit()')
+    expect(processExitSpy).toHaveBeenCalled()
+    consoleErrorSpy.mockRestore()
+    processExitSpy.mockRestore()
+  })
   describe('should parse the `dedupe` command correctly', () => {
     it('with no arguments', () => {
       const params = parseDedupeParams([])
@@ -82,10 +82,12 @@ describe('cli', () => {
     it('without arguments', () => {
       const params = parseDedupeJustParams([])
       expect(params.dependency).toBe(null)
+      expect(params.newVersion).toBe(null)
     })
     it('with the dependency argument', () => {
-      const params = parseDedupeJustParams(['abc'])
+      const params = parseDedupeJustParams(['abc', 'ijk'])
       expect(params.dependency).toBe('abc')
+      expect(params.newVersion).toBe('ijk')
     })
   })
 

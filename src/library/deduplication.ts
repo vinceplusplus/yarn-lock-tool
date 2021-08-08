@@ -17,13 +17,13 @@ import {
 import { load, save, WorkingContext } from './io'
 
 export type DeduplicateDelegate = {
-  onFindOrphans?: (orphanedDependencies: VersionedPackages) => void
-  onDeduplicate?: (
+  onFoundOrphans?: (orphanedDependencies: VersionedPackages) => void
+  onDeduplicated?: (
     versionedPackageName: string,
     originalDependency: YarnLockFirstLevelDependency,
     targetDependency: YarnLockFirstLevelDependency,
   ) => void
-  onRemoveUnreachable?: (
+  onRemovedUnreachable?: (
     versionedPackageName: string,
     dependency: YarnLockFirstLevelDependency,
   ) => void
@@ -44,9 +44,11 @@ export const deduplicate = (
     },
     firstLevelDependencies,
   )
-  delegate?.onFindOrphans?.(orphanedDependencies)
+  delegate?.onFoundOrphans?.(orphanedDependencies)
 
-  for (const versionedPackageName of Object.keys(firstLevelDependencies)) {
+  for (const [versionedPackageName, firstLevelDependency] of Object.entries(
+    firstLevelDependencies,
+  )) {
     const { packageName, semVerRange } = extractFromVersionedPackageName(versionedPackageName)
 
     // NOTE: skip when not a valid version range or a clean semver
@@ -82,15 +84,11 @@ export const deduplicate = (
       continue
     }
 
-    const originalFirstLevelDependency = firstLevelDependencies[versionedPackageName]
-    if (originalFirstLevelDependency == null) {
-      throw new Error('should not reach here')
-    }
     firstLevelDependencies[versionedPackageName] = deduplicatedFirstLevelDependency
 
-    delegate?.onDeduplicate?.(
+    delegate?.onDeduplicated?.(
       versionedPackageName,
-      originalFirstLevelDependency,
+      firstLevelDependency,
       deduplicatedFirstLevelDependency,
     )
   }
@@ -105,19 +103,16 @@ export const deduplicate = (
   )
 
   // NOTE: get rid of any unreachable
-  for (const versionedPackageName of Object.keys(firstLevelDependencies)) {
+  for (const [versionedPackageName, firstLevelDependency] of Object.entries(
+    firstLevelDependencies,
+  )) {
     if (
       reachableDependencies[versionedPackageName] == null &&
       orphanedDependencies[versionedPackageName] == null
     ) {
-      const firstLevelDependency = firstLevelDependencies[versionedPackageName]
-      if (firstLevelDependency == null) {
-        throw new Error('should not reach here')
-      }
-
       delete firstLevelDependencies[versionedPackageName]
 
-      delegate?.onRemoveUnreachable?.(versionedPackageName, firstLevelDependency)
+      delegate?.onRemovedUnreachable?.(versionedPackageName, firstLevelDependency)
     }
   }
 }
@@ -167,7 +162,7 @@ export const deduplicateOnDirectory = (params: DeduplicateOnDirectoryParams) => 
   let unreachableRemovalCount = 0
 
   deduplicate(workingContext, resolutions, {
-    onFindOrphans: (orphanedDependencies) => {
+    onFoundOrphans: (orphanedDependencies) => {
       if (Object.entries(orphanedDependencies).length > 0) {
         if (printsLog) {
           // NOTE: could be from `resolutions` in `package.json` or incomplete yarn.lock after deduplicate without running `yarn`
@@ -184,7 +179,7 @@ export const deduplicateOnDirectory = (params: DeduplicateOnDirectoryParams) => 
         }
       }
     },
-    onDeduplicate: (versionedPackageName, originalDependency, targetDependency) => {
+    onDeduplicated: (versionedPackageName, originalDependency, targetDependency) => {
       if (printsLog) {
         console.log(
           `${versionedPackageName}, ${originalDependency.version} -> ${targetDependency.version}`,
@@ -192,7 +187,7 @@ export const deduplicateOnDirectory = (params: DeduplicateOnDirectoryParams) => 
       }
       updatedDependencyCount += 1
     },
-    onRemoveUnreachable: (versionedPackageName, dependency) => {
+    onRemovedUnreachable: (versionedPackageName, dependency) => {
       if (printsLog) {
         console.log(`- ${versionedPackageName}, ${dependency.version}`)
       }

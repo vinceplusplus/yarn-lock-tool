@@ -8,6 +8,7 @@ import type {
   YarnLockFirstLevelDependencies,
   YarnLockFirstLevelDependency,
 } from '../types/types'
+import { assertNonNullish } from '../utils/assertion'
 import { lazily } from '../utils/lazilyGet'
 import { extractFromVersionedPackageName } from './analysis'
 
@@ -41,6 +42,8 @@ const checkSameResolvedVersions = (workingContext: WorkingContext) => {
         firstLevelDependency,
       }))
       .getCurrentContainer()
+
+    // TODO: normally it wouldn't happen, but if so, the tool would critically fail
     if (firstLevelDependency !== existingVersionContainer.firstLevelDependency) {
       console.log(`error: Same resolved version (${firstLevelDependency.version}) found`)
       console.log(`first seen: ${existingVersionContainer.versionedPackageName}`)
@@ -54,6 +57,7 @@ const checkSameResolvedVersions = (workingContext: WorkingContext) => {
 const performSanityChecks = (workingContext: WorkingContext) => {
   const isValid = [checkSameResolvedVersions(workingContext)].reduce(
     (running, item) => running && item,
+    true,
   )
   if (!isValid) {
     throw new Error('one or more errors when performing sanity checks')
@@ -68,9 +72,7 @@ export const load = (dirPath: string): WorkingContext => {
     throw new Error(`failed to parse \`yarn.lock\`, type: ${yarnLockJSON.type}`)
   }
 
-  if (yarnLockJSON.object == null) {
-    throw new Error('failed to parse `yarn.lock`, null `object`')
-  }
+  assertNonNullish(yarnLockJSON.object)
 
   const packageJSON = JSON.parse(
     fs.readFileSync(path.join(dirPath, 'package.json'), 'utf-8'),
@@ -91,9 +93,9 @@ export const load = (dirPath: string): WorkingContext => {
   return workingContext
 }
 
-export const save = (workingContext: WorkingContext) => {
+export const save = (workingContext: WorkingContext, dirPath?: string | null | undefined) => {
   fs.writeFileSync(
-    path.join(workingContext.dirPath, 'yarn.lock'),
+    path.join(dirPath ?? workingContext.dirPath, 'yarn.lock'),
     lockfile.stringify(workingContext.yarnLockJSON.object),
   )
 }
