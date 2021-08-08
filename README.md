@@ -1,3 +1,12 @@
+<p>
+  <a href="https://github.com/vinceplusplus/yarn-lock-tool/actions?query=workflow%3Atest+event%3Apush">
+    <img src="https://github.com/vinceplusplus/yarn-lock-tool/workflows/test/badge.svg?event=push">
+  </a>
+  <a href="https://codecov.io/gh/vinceplusplus/yarn-lock-tool">
+    <img src="https://codecov.io/gh/vinceplusplus/yarn-lock-tool/branch/master/graph/badge.svg" />
+  </a>
+</p>
+
 # yarn-lock-tool
 
 `yarn-lock-tool` is a tool to analyze and deduplicate dependencies found in a yarn lock file.
