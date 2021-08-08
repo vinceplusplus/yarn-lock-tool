@@ -39,6 +39,9 @@ jobs:
       - name: Test
         run: yarn test --coverage
 
+      - name: Test if nothing to dedupe
+        run: yarn test:dependencies
+
       - name: Upload code coverage
         uses: codecov/codecov-action@v1
         with:

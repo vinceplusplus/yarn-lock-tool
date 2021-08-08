@@ -9,6 +9,11 @@ export const dedupe = async (paramsContainer: DedupeParamsContainer) => {
     printsLog: true,
     skirmishes: params.skirmishes,
   })
+
+  if (params.skirmishes) {
+    return
+  }
+
   console.log('\n')
   console.log("Don't forget to run `yarn` to clean up the ghost entries in `yarn.lock`")
 }

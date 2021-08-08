@@ -187,6 +187,31 @@ yarn-lock-tool listWithDependencyPaths --sources devDependencies --sortsByDepth 
 }
 ```
 
+### Automate duplication check
+Could add as a form of unit test
+```typescript
+import { buildResolutionsFromLockFileObject, deduplicate, load } from 'yarn-lock-tool'
+
+it('there should be no dependencies to deduplicate', () => {
+  const workingContext = load('.')
+  const resolutions = buildResolutionsFromLockFileObject(workingContext.firstLevelDependencies)
+
+  let deduplicated: string[] = []
+  let removedUnreachables: string[] = []
+  deduplicate(workingContext, resolutions, {
+    onDeduplicated: (versionedPackageName) => {
+      deduplicated = [...deduplicated, versionedPackageName]
+    },
+    onRemovedUnreachable: (versionedPackageName) => {
+      removedUnreachables = [...removedUnreachables, versionedPackageName]
+    },
+  })
+
+  expect(deduplicated).toEqual([])
+  expect(removedUnreachables).toEqual([])
+})
+```
+
 ## Why?
 When `yarn` install packages without a `yarn.lock` file, it will deduplicate. However, newer
 installations will not deduplicate the existing dependencies to reduce risk of breaking, over time,
