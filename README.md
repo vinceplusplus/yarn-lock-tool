@@ -26,7 +26,7 @@ yarn global add yarn-lock-tool
 yarn-lock-tool dedupe
 ```
 
-```shell
+```
 @babel/core@^7.7.5, 7.13.16 -> 7.14.2
 @babel/generator@^7.13.16, 7.13.16 -> 7.14.2
 @babel/helper-function-name@^7.12.13, 7.12.13 -> 7.14.2
@@ -120,7 +120,7 @@ Could be used to analyze duplicated dependencies
 yarn-lock-tool list --showsHavingMultipleVersionsOnly --sortsByResolvedVersionCount --depth 1
 ```
 
-```shell
+```
 {
   'type-fest': {
     'type-fest@^0.13.1': [Object],
@@ -154,7 +154,7 @@ dependencies could be reached.
 yarn-lock-tool listWithDependencyPaths --sources devDependencies --sortsByDepth --filtersBySources --showsDuplicatedOnly --depth 4
 ```
 
-```shell
+```
 {
   ...
   '@types/node': {
